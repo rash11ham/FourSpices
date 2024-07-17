@@ -8,7 +8,7 @@ namespace FourSpices.Extentions
 {
     public static class IEnumerableExtention
     {
-        public static IEnumerable<SelectListItem> ToSelectListItems<T>(this IEnumerable<T> items, int selectedValue)
+        public static IEnumerable<SelectListItem> ToSelectListItem<T>(this IEnumerable<T> items, int selectedValue)
         {
             return from item in items
                    select new SelectListItem

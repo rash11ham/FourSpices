@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FourSpices.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -29,6 +31,8 @@ namespace FourSpices.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();
+            //This will end the session on logout
+            HttpContext.Session.SetInt32(SD.ssCartCount, 0);
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
             {
@@ -36,7 +40,7 @@ namespace FourSpices.Areas.Identity.Pages.Account
             }
             else
             {
-                return RedirectToPage();
+                return RedirectToPage("Logout");
             }
         }
     }

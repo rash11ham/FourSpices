@@ -16,7 +16,7 @@ namespace FourSpices.Models
         [Required]
         public string Name { get; set; }
 
-        [Display(Name = "Category Id")]
+        [Display(Name = "Category")]
         [Required]
         public int CategoryId { get; set; }
 

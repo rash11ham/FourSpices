@@ -1,0 +1,74 @@
+To create Main page or the customer facing page: 
+Controller was added to Customer area
+and Index view page to the view folder of the Customer area
+_ThumbnailAreaPartial was added to the project View/Shared
+
+In the _thumbnail.. and the related index view we have added some useful frontend functionalities which is very necessary to be reviewed and understod. 
+
+
+In this section we Start with Register (Areas/identity/pages/account/Register.cshtml)
+Keep in mind that identity is a Razor page.
+
+It does have a view and page model in it self. 
+go and add some properties in to the page model. such as name address phone
+To add new properties to db create a new Model in the Models 
+call it ApplicationUser
+it should inhirate from IdentityUser which is coming from AspNetCore.Identity
+
+Copy the added props from the Register page model to the ApplicationUser
+The required annotation of the name prop is not necessary and the phone number is already in the Db so no need for it too. 
+add the Model to ApplicationDbContext
+add-migration AddMoreFieldsToIdentityUser
+update-migration
+
+update the Register view to accommodate the new props
+
+update the OnPostAsync method in the Register model view. This method is responsible when a user clicks the Register button in the view
+before that we need to add role in our project
+add role using dependancy injection
+Ex: private readonly RoleManager<IdentityRole> _roleManager;
+add it in the constructor
+
+now change the user variable in the OnPostAsync METHOD when triggered all the related fields get posted
+There is another variable result which will be creating the user with user object and password. If that is successfull we add role here
+First we add our roles in the static file SD (utility/SD)
+
+Then we add the roles in our result success 
+
+After we add role if run our appliation we run in to an error. It is because we need to modify startup file ConfigureServices method from AddDefaultIdentity to AddIdentity and add IdentityRole
+Ex: services.AddIdentity<IdentityUser,IdentityRole>()
+add this .AddDefaultTokenProviders() will help those who forgot their password
+
+now if you run the project again you will face same error but before it was about Manage role now it will be about EmailSender
+to solve it we add a new folder Services to the project and a class called EmailSender and extended it to IEmailSender then we implemente the interface. we need to add it to startup file just under addIden
+ex: services.AddSingleton<IEmailSender, EmailSender> ();
+
+now we can register and can see it in the db
+
+now that we have role we can work on the admin registering new users 
+
+from dropdown the user option
+
+add a new controller to admin UserController
+add [Area("Admin")]
+
+add dependancey inject and constructor
+
+First action we want to display a list of users(employees) except the current user login in.
+For that we need to get the identity of the user logged in with ClaimsIdentity from Claims
+
+add view that shows list employees with a register new employee
+We dont have register action for user because the we use the register page from identity
+
+
+Now we need to add a functionality in our Register view that only visible to Manager, a radio button of employee roles for registration
+
+We also add some functionality to the our Register model page  to allow the admin add employees
+
+
+Add Authorization
+Authorization is the type of or level of access a user have. Example: a customer may be able to login and see the menu and order pay. However, an Admin is authorized to add or delete user, add menue modify menu ... 
+
+
+
+

@@ -1,5 +1,7 @@
 ﻿using FourSpices.Data;
 using FourSpices.Models;
+using FourSpices.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace FourSpices.Areas.Admin.Controllers
 {
+    [Authorize(Roles = SD.ManagerUser)]
     [Area("Admin")]
     public class CategoryController : Controller
     {

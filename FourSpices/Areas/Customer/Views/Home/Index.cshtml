@@ -1,8 +1,91 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model FourSpices.Models.ViewModels.IndexViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<br />
+@if (Model.Coupons.ToList().Count() > 0)
+{
+    <div class="border">
+        <div class="carousel" data-ride="carousel" data-interval="2500">
+            @for (int i = 0; i < Model.Coupons.Count(); i++)
+            {
+                if (i == 0)
+                {
+                    <div class="carousel-item active">
+                        @{
+                            var base64 = Convert.ToBase64String(Model.Coupons.ToList()[i].Picture);
+                            var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                        }
+
+                        <img src="@imgsrc" height="50px" class="d-block w-100" />
+                    </div>
+                }
+                else
+                {
+                    <div class="carousel-item">
+                        @{
+                            var base64 = Convert.ToBase64String(Model.Coupons.ToList()[i].Picture);
+                            var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                        }
+
+                        <img src="@imgsrc" height="50px" class="d-block w-100" />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+<br /><br />
+
+<div class="backgroundWhite container">
+    @*we add a menu bar in the body of our main page to display categories*@
+    <ul id="menu-filters" class="menu-filter-list list-inline text-center">
+        @*data-filter - filter is a key word or a name that we use for data attribute.
+            The data- will be ignored by rendering in Asp.Net and we will be using the filter only -
+            using jQuery check below Scripts*@
+        <li class="filter active btn btn-secondary ml-1 mr-1" data-filter=".menu-restaurant">Show All</li>
+
+        @foreach (var item in Model.Categories)
+        {
+            <li class="filter ml-1 mr-1" data-filter=".@item.Name.Replace(" ",string.Empty)">@item.Name</li>
+        }
+    </ul>
+
+    @foreach (var category in Model.Categories)
+    {
+        <div class="row" id="menu-wrapper">
+            <partial name="_ThumbnailAreaPartial" model="@Model.MenuItems.Where(u=>u.Category.Name.Equals(category.Name))" />
+        </div>
+    }
 </div>
+
+@section Scripts{ 
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" 
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" 
+        crossorigin="anonymous">
+</script>
+
+<script>
+    //we are retriving the div with class post from _ThumbnailAreaPartial --first div line 5 in to this variable
+    var posts = $('.post');
+    //Any time the menu-filters id which is a parent tag for (li) is clicked this function gets tregered 
+    (function ($) {
+        $("#menu-filters li").click(function () {
+            //('active btn btn-secondary') is classes in the first li for show all
+            $("#menu-filters li").removeClass('active btn btn-secondary');
+            //(this) any category user selected
+            $(this).addClass('active btn btn-secondary');
+
+            //in the above we have li with data-filter attribute we retrive it here .data("filter")
+            var selectedFilter = $(this).data("filter");
+
+            $(".menu-restaurant").fadeOut();
+
+            setTimeout(function () {
+                $(selectedFilter).slideDown();
+            }, 300);
+        });
+    })(jQuery);
+</script>
+
+}
